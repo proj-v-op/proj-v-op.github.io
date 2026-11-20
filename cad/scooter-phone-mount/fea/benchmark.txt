@@ -1,0 +1,2 @@
+tip deflection  FE 14.857 mm   theory 15.231 mm   diff 2.5%
+first frequency FE 5.07 Hz   theory 5.02 Hz   diff 0.9%
