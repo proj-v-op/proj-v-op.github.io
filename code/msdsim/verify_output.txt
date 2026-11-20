@@ -1,0 +1,16 @@
+1. equilibrium residual: 2.6e-13                       PASS
+2. K asymmetry 9.0e-11, positive definite: True       PASS
+3. mode  linear[Hz]  nearest FFT peak[Hz]  err[%]
+           1.474       1.475            0.06
+           1.765       1.762            0.17
+           3.722       3.725            0.06
+           4.101       4.099            0.03
+           4.426       4.424            0.03
+           4.716       4.712            0.08
+           5.577       5.574            0.04
+           6.077       6.074            0.05
+           8.997       8.999            0.03
+          14.247      14.248            0.01
+          26.976      26.972            0.02
+   worst error 0.17%                                  PASS
+4. energy drift (undamped, undriven): 1.2e-14 J      PASS
