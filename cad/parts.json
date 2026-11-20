@@ -1,0 +1,32 @@
+{
+  "parts": [
+    {
+      "id": "scooter-phone-mount",
+      "name": "Scooter Phone Mount (cast silicone)",
+      "summary": "Silicone phone mount for an Unagi electric scooter, designed in SolidWorks and cast from a 3D-printed mold.",
+      "status": "in progress",
+      "tags": ["SolidWorks", "Mold design", "Silicone casting", "3D printing"],
+      "hero": "",
+      "description": "Designed for the silicone casting and mold design class. The page will cover the part model, the mold design (cavity, parting line, pour and vent), and the cast result.",
+      "specs": {},
+      "images": [],
+      "drawings": [],
+      "files": [],
+      "usedIn": []
+    },
+    {
+      "id": "hand-crank-mechanism",
+      "name": "Hand-Crank Mechanism",
+      "summary": "A purely mechanical, hand-cranked multi-part mechanism, modeled as a CAD assembly.",
+      "status": "in progress",
+      "tags": ["SolidWorks", "Assembly", "Mechanism"],
+      "hero": "",
+      "description": "Personal project. The page will show the assembly, each part with its drawing, and a motion study.",
+      "specs": {},
+      "images": [],
+      "drawings": [],
+      "files": [],
+      "usedIn": []
+    }
+  ]
+}
