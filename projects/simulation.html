@@ -1,42 +1,62 @@
-<!doctype html><html lang="en"><head><title>Mass-Spring-Damper Simulation — Owen Pritchard</title>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="../style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11/styles/github-dark.min.css"><script defer src="https://cdn.jsdelivr.net/npm/highlight.js@11/lib/common.min.js"></script><script>window.MathJax={tex:{inlineMath:[["$","$"],["\\\\(","\\\\)"]]}}</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script><script defer src="../site.js"></script>
-</head><body data-repo="https://github.com/proj-v-op/proj-v-op.github.io">
-<header class="nav"><div class="wrap"><a class="brand" href="../index.html">Owen Pritchard</a><nav>
-<a href="../projects/simulation.html" class="on">Simulation</a>
-<a href="../projects/drone.html" class="">Drone</a>
-<a href="../projects/cad.html" class="">CAD</a>
-</nav></div></header>
-<main class="wrap">
-<div class="page-head"><h1>Mass-Spring-Damper Simulation</h1><p>A Python solver for coupled 3D mass-spring-damper systems: rigid bodies, nonlinear springs, dampers and multiple driving forces. The solver is built and verified; new system models plug into it.</p></div>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mass-Spring-Damper Simulation - Owen Pritchard</title>
+<link rel="stylesheet" href="../style.css">
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+</head>
+<body>
 
-<h2>Example system (v0)</h2><p>The first system built on the solver: a rigid body, a point mass, a pulley and a counterweight, connected by nonlinear springs, dampers and an elastic string, and driven by four independent forcing sources.</p>
-<figure><img src="../assets/img/msd-system.png" alt="System schematic with equations of motion"><figcaption>Schematic and equations of motion. <a href="../assets/msd-system-diagram.pdf">PDF with free-body diagrams</a>.</figcaption></figure>
+<nav><a href="../index.html">Home</a> <a href="simulation.html">Simulation</a> <a href="drone.html">Drones</a> <a href="cad.html">CAD</a></nav>
 
-<h2>What it models</h2>
-<table><tr><th>Feature</th><th>Why it matters</th></tr>
-<tr><td>Rigid body, 6 DOF, off-centre attachments</td><td>Forces create moments, so translation and rotation couple</td></tr>
-<tr><td>Oblique springs, full 3D geometry</td><td>Direction changes as the system moves (geometric nonlinearity); pretension adds transverse stiffness</td></tr>
-<tr><td>Taut-only elastic strings over a pulley</td><td>Piecewise dynamics: slack and taut regimes</td></tr>
-<tr><td>Cubic hardening spring</td><td>Amplitude-dependent resonance, jump behaviour</td></tr>
-<tr><td>Localised dampers (not proportional)</td><td>Complex modes; modal damping does not decouple</td></tr>
-<tr><td>Four drives: base motion, rotating unbalance, harmonic force, motor torque</td><td>Multi-frequency forcing, quasi-periodic response</td></tr></table>
+<h1>Mass-Spring-Damper Simulation</h1>
+<p class="small">Python, NumPy, SciPy. In progress.</p>
 
-<h2>Governing equations</h2>
-<div class="eq">$$I_p\ddot\theta = R\,(T_R - T_L) - c_\theta\dot\theta - k_\theta\theta + \tau_0\sin\Omega_p t$$
-$$\mathbf{F}_e = \left[k_e\delta_e + \kappa_e\delta_e^{3} + c_e\dot L_e\right]\hat{\mathbf n}_e,\qquad \delta_e = L_e - L_{0e}$$</div>
-<p class="note">Full set of 11 equations is in the schematic above. Add the derivation and linearised modal analysis here as the project grows.</p>
+<p>I wanted a simulation that uses most of what I've learned in dynamics in one system, so I wrote a solver for coupled 3D mass-spring-damper systems. The first system I set up has a rigid body, a point mass, a pulley, and a counterweight, connected by springs, dampers, and elastic strings, with four separate driving inputs.</p>
+
+<img src="../assets/img/msd-system.png" alt="System diagram">
+<p class="small">System diagram and equations of motion. <a href="../assets/msd-system-diagram.pdf">PDF with free body diagrams</a>.</p>
+
+<h2>What's in it</h2>
+<ul>
+  <li>A rigid body with 6 degrees of freedom. The springs attach off-center, so they create moments too.</li>
+  <li>Springs at angles, using the full 3D geometry, so their directions change as things move.</li>
+  <li>Strings over a pulley that can only pull, never push.</li>
+  <li>One spring with a cubic term, so it gets stiffer as it stretches.</li>
+  <li>Four inputs: a moving wall, an unbalanced rotor, a harmonic force, and a motor torque on the pulley.</li>
+</ul>
+
+<p>Each spring/damper element gives a force along the line between its two ends:</p>
+$$\mathbf{F}_e = \left(k_e\delta_e + \kappa_e\delta_e^3 + c_e\dot L_e\right)\hat{\mathbf n}_e, \qquad \delta_e = L_e - L_{0e}$$
+<p>and the pulley follows</p>
+$$I_p\ddot\theta = R(T_R - T_L) - c_\theta\dot\theta - k_\theta\theta + \tau_0\sin\Omega_p t$$
+
+<h2>Checking it</h2>
+<p>To make sure the code is right, <a href="https://github.com/proj-v-op/proj-v-op.github.io/blob/main/code/msdsim/verify.py">verify.py</a> checks four things:</p>
+<ol>
+  <li>The static equilibrium it finds really has all forces balanced.</li>
+  <li>The linearized stiffness matrix is symmetric and positive definite, so the equilibrium is stable.</li>
+  <li>The natural frequencies from the linearized model match the peaks in an FFT of the full nonlinear free vibration (worst error 0.17%).</li>
+  <li>With no damping and no drives, total energy stays constant.</li>
+</ol>
+<p>Output: <a href="https://github.com/proj-v-op/proj-v-op.github.io/blob/main/code/msdsim/verify_output.txt">verify_output.txt</a>.</p>
+
+<img src="../assets/img/msd-response.png" alt="Simulation results">
+<p class="small">All four drives on. Positions, string tensions, and the energy balance error (under 1e-9 J).</p>
 
 <h2>Code</h2>
-<p>The simulator is a small Python package (NumPy + SciPy). Each file is shown live from the repository's <code>code/msdsim/</code> folder.</p>
-<h3>params.py — parameters and geometry</h3><div class="codebox" data-src="code/msdsim/params.py" data-lang="python"></div>
-<h3>model.py — equations of motion, statics, energy</h3><div class="codebox" data-src="code/msdsim/model.py" data-lang="python"></div>
-<h3>modal.py — linearisation and mode shapes</h3><div class="codebox" data-src="code/msdsim/modal.py" data-lang="python"></div>
-<h3>run.py — simulate, plot</h3><div class="codebox" data-src="code/msdsim/run.py" data-lang="python"></div>
-<h3>verify.py — independent checks</h3><div class="codebox" data-src="code/msdsim/verify.py" data-lang="python"></div>
+<ul>
+  <li><a href="https://github.com/proj-v-op/proj-v-op.github.io/blob/main/code/msdsim/params.py">params.py</a> - masses, stiffnesses, geometry</li>
+  <li><a href="https://github.com/proj-v-op/proj-v-op.github.io/blob/main/code/msdsim/model.py">model.py</a> - equations of motion and equilibrium</li>
+  <li><a href="https://github.com/proj-v-op/proj-v-op.github.io/blob/main/code/msdsim/modal.py">modal.py</a> - linearization and mode shapes</li>
+  <li><a href="https://github.com/proj-v-op/proj-v-op.github.io/blob/main/code/msdsim/run.py">run.py</a> - runs the simulation and makes plots</li>
+  <li><a href="https://github.com/proj-v-op/proj-v-op.github.io/blob/main/code/msdsim/verify.py">verify.py</a> - the checks above</li>
+</ul>
 
-<h2>Results</h2>
-<figure><img src="../assets/img/msd-response.png" alt="Time response with all four drives on"><figcaption>All four drives on: positions, string tensions (both stay taut), and the energy-balance residual (below 1e-9 J).</figcaption></figure>
-<p class="note">Coming: forced-response sweeps (to show the cubic-spring jump), mode-shape plots, and a 3D animation.</p>
-<figure><video controls preload="metadata" src="../assets/video/simulation.mp4"></video><figcaption>Simulation animation (add <code>assets/video/simulation.mp4</code>).</figcaption></figure>
-</main>
-<footer><div class="wrap">Owen Pritchard · Mechanical &amp; Aerospace Engineering, UCLA · <a href="https://github.com/proj-v-op">GitHub</a></div></footer></body></html>
+<h2>Next</h2>
+<p>Frequency sweeps to show the jump from the cubic spring, mode shape plots, and an animation.</p>
+
+</body>
+</html>
