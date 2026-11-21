@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Door Latch Plug - Owen Pritchard</title>
+<link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+
+<nav><a href="../../index.html">Home</a> <a href="../simulation.html">Simulation</a> <a href="../drone.html">Drones</a> <a href="../cad.html">CAD</a></nav>
+
+<h1>Door Latch Plug</h1>
+<p class="small">Designed in CadQuery (STEP files open in SolidWorks), 3D printed in PETG. Status: designed and checked, printing and testing next.</p>
+
+<p>This is a small push-to-release plug that fills the hole in a door frame's strike plate, so the latch bolt has nothing to catch on. The door still closes, it just never latches, which means it can't lock behind you. Press the lower half of the face and the plug rocks back, the top edge lifts out a couple millimeters, and you can pull it free. No tools.</p>
+
+<p>The interesting part of this one isn't the shape, it's how little I knew when I started. I had one photo of the strike plate, no calipers, no spec sheet, and no way to see inside the hole. So instead of guessing one design and hoping, I wrote down everything I didn't know and built a version that covers each unknown. Six versions, one print.</p>
+
+<img src="../../cad/door-strike-plug/photos/strike-plate.jpg" alt="Strike plate on the door frame" style="max-width:360px">
+<p class="small">The only thing I had to start from: a Schlage-style strike plate on the frame.</p>
+
+<h2>Measuring without a ruler</h2>
+<p>Standard duct tape is 1.88 inches (48 mm) wide, so a strip of it is a ruler I always have on me. I pressed a piece over the hole, traced the outline, and photographed the tape flat. Using the tape's width as the scale, the outline came out around 20 mm wide by 34 mm tall, flat on one side with big rounded corners on the other.</p>
+
+<img src="../../cad/door-strike-plug/photos/tape-trace.jpg" alt="Duct tape with the hole traced on it" style="max-width:360px">
+<p class="small">The duct tape trace. Scale comes from the tape width.</p>
+
+<p>I sanity checked that against standard sizes. These strike plates are about 2-3/4 by 1-1/8 inches, residential holes are small (around 25 by 16 to 19 mm), and commercial Schlage hardware has a bigger hole, so 20 by 34 is believable. A marker trace usually lands a little outside the real edge, so I designed for a hole about 0.5 mm smaller than the trace: 19.8 by 33.9 mm. That is an estimate, not a measurement, and the whole six-version plan comes from that.</p>
+
+<h2>How it works</h2>
+<img src="../../cad/door-strike-plug/renders/how-it-works.png" alt="Overview and rocking diagram">
+<ul>
+<li>The plug is a hollow block shaped to fill the hole. The face sits 0.2 mm below the plate surface so the bolt can't catch on an edge.</li>
+<li>A small foot on the back sits on the bottom of the box behind the plate. That foot is what stops the plug from being pushed in deeper by the bolt, and it's the pivot when you press.</li>
+<li>Press the lower half and the plug rocks on the foot. The top edge lifts out about 2.3 mm at a 12 degree tilt, enough to get a fingernail on.</li>
+<li>Two thin tongues in the side walls each have a small bump. The bumps press on the sides of the hole, and that friction is what holds the plug in.</li>
+<li>It's hollow with an open back so it prints face down with no supports.</li>
+</ul>
+<p>One honest limit: version 1 tilts out, it doesn't shoot out. A spring leaf could do that, but it only works if I know how deep the box is, which I don't yet.</p>
+
+<h2>What I didn't know, and the six versions</h2>
+<p>Each unknown became a version. All six print on one plate (numbers engraved inside each one), so one print run tests every guess.</p>
+
+<table>
+<tr><th>#</th><th>Version</th><th>What it solves for</th></tr>
+<tr><td>1</td><td>Snug</td><td>Hole narrower than my estimate</td></tr>
+<tr><td>2</td><td>Medium</td><td>My best guess for the hole</td></tr>
+<tr><td>3</td><td>Tight</td><td>Hole wider than my estimate</td></tr>
+<tr><td>4</td><td>Mirrored</td><td>I got the flat and round sides backwards</td></tr>
+<tr><td>5</td><td>Deep</td><td>Box behind the plate is deeper than I assumed</td></tr>
+<tr><td>6</td><td>Shallow</td><td>Box behind the plate is shallower than I assumed</td></tr>
+</table>
+
+<h3>1. Snug</h3>
+<img src="../../cad/door-strike-plug/renders/config1-snug.png" alt="Config 1, snug">
+<p>The side bumps squeeze the hole by 0.4 mm total, the gentlest of the three. If the hole turns out narrower than I think, this one still goes in without cracking the side tongues (they bend about 3 percent even if the hole is a full millimeter narrower). The downside is that if the hole is actually wider, it barely grips at all.</p>
+
+<h3>2. Medium</h3>
+<img src="../../cad/door-strike-plug/renders/config2-medium.png" alt="Config 2, medium">
+<p>0.8 mm of squeeze. This is my best guess and the baseline the other versions are compared against. It still holds if the hole is 0.5 mm wider than my estimate, and the tongues stay under 3 percent bend if it's 0.5 mm narrower.</p>
+
+<h3>3. Tight</h3>
+<img src="../../cad/door-strike-plug/renders/config3-tight.png" alt="Config 3, tight">
+<p>1.2 mm of squeeze, the strongest hold. If the hole is wider than my estimate, this is the one that keeps a grip. The trade is that a narrower hole puts about 5 percent bend on the tongues, which is getting close to where PETG could crack.</p>
+
+<h3>4. Mirrored</h3>
+<img src="../../cad/door-strike-plug/renders/config4-mirrored.png" alt="Config 4, mirrored">
+<p>The hole is D shaped, flat on one side and rounded on the other. I read which side is which from a tape trace I was looking at from the sticky side, so it's very possible I flipped it. This is the medium version mirrored. If the other five don't seat because the corners don't line up, this is the fix.</p>
+
+<h3>5. Deep</h3>
+<img src="../../cad/door-strike-plug/renders/config5-deep.png" alt="Config 5, deep">
+<p>The foot has to touch the bottom of the box for the plug to sit flush, so the plug's depth has to match the box. Versions 1 to 4 need 11.2 mm of box. This one has a 13 mm body and needs 14.2 mm, and it needs 15.5 mm while it's rocked. I also made the body 1 mm shorter (28 mm instead of 29) because with the pivot farther back, the full height would touch the hole sooner when rocking.</p>
+
+<h3>6. Shallow</h3>
+<img src="../../cad/door-strike-plug/renders/config6-shallow.png" alt="Config 6, shallow">
+<p>The other direction: if the box is shallow, the standard plug would stick out of the hole. This one is 7.5 mm deep and needs 8.7 mm flush and 10.1 mm rocked. Shorter tongues are stiffer, so I thinned the walls to 0.8 mm and cut the squeeze to 0.5 mm. It's also the one most likely to crack if the hole is tight: at a hole 1 mm narrower the tongues bend about 6.6 percent.</p>
+
+<img src="../../cad/door-strike-plug/renders/print-plate.png" alt="All six on one print plate">
+<p class="small">All six on one plate, printed face down.</p>
+
+<h2>Checks before printing</h2>
+<p>I wrote the model as a script so every number is a setting I can change. Before printing I checked two things in code. Nothing here is measured yet, it's all predictions I'll compare against the real print.</p>
+
+<h3>Does it clear the hole when it rocks?</h3>
+<p>The first version I drew only rocked about 6 degrees before its widest part hit the hole, which would have lifted the top edge only 1.5 mm. That's not enough to grab, and it would have been worse if the hole is a millimeter smaller than I think. I narrowed the body and chamfered the face edges, and the final versions rock 15 to 21 degrees before touching, even with a hole a full millimeter smaller than my estimate. Version 5 (deep) is the tightest at about 13 degrees in that worst case. Version 6 never touches.</p>
+
+<h3>How hard does it hold?</h3>
+<p>I estimated the holding force from how much each side tongue bends (treating it like a diving board), assuming PETG and a friction guess of 0.35. The numbers are holding force in newtons and how much the tongue bends in percent. PETG starts to risk cracking somewhere around 4 to 5 percent, which is a rough number from memory, not from a datasheet.</p>
+
+<table>
+<tr><th>Version</th><th>Hole 0.5 mm wider</th><th>Hole as estimated</th><th>Hole 0.5 mm narrower</th><th>Hole 1 mm narrower</th></tr>
+<tr><td>1 Snug</td><td>0.0 N / 0.0%</td><td>2.6 N / 0.9%</td><td>5.8 N / 2.1%</td><td>9.1 N / 3.2%</td></tr>
+<tr><td>2 Medium</td><td>1.9 N / 0.7%</td><td>5.2 N / 1.9%</td><td>8.4 N / 3.0%</td><td>11.7 N / 4.2%</td></tr>
+<tr><td>3 Tight</td><td>4.5 N / 1.6%</td><td>7.8 N / 2.8%</td><td>11.0 N / 3.9%</td><td>14.3 N / 5.1%</td></tr>
+<tr><td>4 Mirrored</td><td>1.9 N / 0.7%</td><td>5.2 N / 1.9%</td><td>8.4 N / 3.0%</td><td>11.7 N / 4.2%</td></tr>
+<tr><td>5 Deep</td><td>1.9 N / 0.7%</td><td>5.2 N / 1.9%</td><td>8.4 N / 3.0%</td><td>11.7 N / 4.2%</td></tr>
+<tr><td>6 Shallow</td><td>0.0 N / 0.0%</td><td>7.1 N / 2.2%</td><td>14.2 N / 4.4%</td><td>21.2 N / 6.6%</td></tr>
+</table>
+<p class="small">Versions 4 and 5 use the same side tongues as version 2, so their numbers match it.</p>
+
+<p>The thing I can't predict is the bolt spring. If the spring pushes harder than the plug holds, the plug gets pushed in and the bolt follows it. That's exactly why the foot matters, and why the depth versions exist.</p>
+
+<h2>Test results</h2>
+<p>Printing all six tomorrow. I'll fill this in with what I find:</p>
+<ul>
+<li>Which version fits, and the real hole width, height, and depth</li>
+<li>Whether the plug stays put when the door closes on it</li>
+<li>Whether press to release works the way the model says</li>
+<li>What I change for version 2</li>
+</ul>
+
+<h2>Files</h2>
+<ul>
+<li><a href="../../cad/door-strike-plug/files/strike_plug_v1_six_pack.stl">All six on one plate (STL for printing)</a></li>
+<li><a href="../../cad/door-strike-plug/files/config1-snug.step">1 Snug (STEP)</a></li>
+<li><a href="../../cad/door-strike-plug/files/config2-medium.step">2 Medium (STEP)</a></li>
+<li><a href="../../cad/door-strike-plug/files/config3-tight.step">3 Tight (STEP)</a></li>
+<li><a href="../../cad/door-strike-plug/files/config4-mirrored.step">4 Mirrored (STEP)</a></li>
+<li><a href="../../cad/door-strike-plug/files/config5-deep.step">5 Deep (STEP)</a></li>
+<li><a href="../../cad/door-strike-plug/files/config6-shallow.step">6 Shallow (STEP)</a></li>
+<li><a href="../../cad/door-strike-plug/code/plug_lib.py">plug_lib.py</a>: the parametric model and the checks</li>
+<li><a href="../../cad/door-strike-plug/code/build_sheet.py">build_sheet.py</a>: builds the six versions and lays them out on one plate</li>
+</ul>
+
+<p><a href="../cad.html">Back to CAD</a></p>
+
+</body>
+</html>
