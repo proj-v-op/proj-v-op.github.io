@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Scooter Phone Mount - Owen Pritchard</title>
 <link rel="stylesheet" href="../../style.css">
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
 </head>
 <body>
 
@@ -14,25 +13,25 @@
 <h1>Scooter Phone Mount</h1>
 <p class="small">SolidWorks, cast silicone, 3D printed mold. Silicone casting and mold design class.</p>
 
-<p>A one-piece silicone mount that holds my iPhone 16 (in its case) on the handlebar of my Unagi electric scooter. It's cast flat in an open 3D printed tray, then stretched onto the phone and strapped to the bar.</p>
+<p>I made this to hold my iPhone 16 (in its case) on the handlebar of my Unagi electric scooter. It's one piece of silicone: you cast it flat in a 3D printed tray, stretch it over the phone, and strap it to the bar.</p>
 
 <img src="../../cad/scooter-phone-mount/renders/mount-iso.png" alt="Phone mount render">
 
 <h2>How it works</h2>
 <ul>
-  <li>Four loops hook over the corners of the phone. The net is cast smaller than the phone, so it stays stretched and grips once it's on.</li>
-  <li>X-shaped arms and two side rails connect the loops to a center hub.</li>
-  <li>The hub has a curved groove on the bottom that sits on the bar.</li>
-  <li>The strap wraps around the bar, passes through the keeper loop, and locks on one of the arrow tabs, like a cable tie. The tabs let it fit different bar sizes.</li>
-  <li>The net is one even thickness with a flat top, so the mold is a single open tray: no lid, no vents. You pour, let it level, and scrape it flush.</li>
+<li>Four loops hook over the corners of the phone. I cast the net smaller than the phone so it stays stretched and grips once it's on.</li>
+<li>X-shaped arms and two side rails tie the loops back to a hub in the middle.</li>
+<li>The hub has a curved groove on the bottom that sits right on the bar.</li>
+<li>The strap wraps around the bar, goes through the keeper loop, and locks onto one of the arrow tabs, kind of like a zip tie. The extra tabs let it fit different bar sizes.</li>
+<li>The whole net is one even thickness with a flat top, so the mold is just an open tray. No lid, no vents. You pour, let it level out, and scrape it flush.</li>
 </ul>
 
 <table>
-  <tr><th>Size (as cast)</th><td>90 x 176 x 10 mm</td></tr>
-  <tr><th>Volume</th><td>39.4 cm&sup3; (class limit 80 cm&sup3;)</td></tr>
-  <tr><th>Mass</th><td>about 46 g at a specific gravity of 1.18</td></tr>
-  <tr><th>Material</th><td>platinum-cure silicone, Shore 15-30A</td></tr>
-  <tr><th>Mold</th><td>open tray, two cavities, 191 x 179 x 11 mm, PLA</td></tr>
+<tr><th>Size (as cast)</th><td>90 x 176 x 10 mm</td></tr>
+<tr><th>Volume</th><td>39.4 cm&sup3; (class limit 80 cm&sup3;)</td></tr>
+<tr><th>Mass</th><td>about 46 g at a specific gravity of 1.18</td></tr>
+<tr><th>Material</th><td>platinum-cure silicone, Shore 15-30A</td></tr>
+<tr><th>Mold</th><td>open tray, two cavities, 191 x 179 x 11 mm, PLA</td></tr>
 </table>
 
 <h2>Renders</h2>
@@ -43,66 +42,11 @@
 <img src="../../cad/scooter-phone-mount/renders/mold-iso.png" alt="Mold tray">
 <p class="small">The two-cavity mold tray.</p>
 
-<h2>FEA: riding loads and vibration</h2>
-<p>I wanted to know two things: does the silicone survive the loads from riding, and does the mount protect the phone from vibration or make it worse? Apple warns that strong vibration can damage the iPhone camera's stabilization, and <a href="https://support.apple.com/en-us/102175">recommends a vibration dampening mount</a> even on scooters.</p>
-
-<h3>Model</h3>
-<ul>
-  <li>Quadratic tetrahedral elements on the STEP export of the part, solved in Python (scikit-fem). About 200,000 degrees of freedom.</li>
-  <li>Silicone is linear elastic, nearly incompressible (&nu; = 0.49). I got the stiffness from the datasheet's 100% modulus using a neo-Hookean fit, so E = 1.14 MPa for a Shore 30A silicone (Mold Star 30) and 0.65 MPa for Shore 15A (Mold Star 15).</li>
-  <li><b>Bar:</b> the strap clamps the hub to the bar, so the whole underside of the hub is fixed. The strap tail is left out, since in use it wraps under the bar.</li>
-  <li><b>Phone:</b> a rigid 220 g block tied to the whole top face of the net (no slipping). That holds as long as the stretch keeps the phone pressed against the silicone.</li>
-</ul>
-<img src="../../cad/scooter-phone-mount/fea/fea-mesh.png" alt="Mesh and boundary conditions">
-
-<h3>Static loads</h3>
-<p>Each case is the phone's and the net's own weight scaled up: 6 g down for hitting a bump (1 g of gravity plus 5 g of shock), 1.5 g forward for hard braking, and 1.5 g sideways. These are design values I picked, not measurements. Results are for E = 1.14 MPa. With softer silicone the stresses stay the same, and the displacements grow by 1.14/0.65.</p>
-<table>
-  <tr><th>Case</th><th>Phone moves</th><th>Typical stress</th><th>Peak stress</th><th>Typical strain</th></tr>
-  <tr><td>6 g bump</td><td>0.012 mm</td><td>35 kPa</td><td>206 kPa</td><td>2.7%</td></tr>
-  <tr><td>1.5 g braking</td><td>0.044 mm</td><td>31 kPa</td><td>148 kPa</td><td>2.3%</td></tr>
-  <tr><td>1.5 g sideways</td><td>0.049 mm</td><td>29 kPa</td><td>176 kPa</td><td>2.2%</td></tr>
-</table>
-<p class="small">"Typical" is the 99.9th percentile over the part. The peak sits right at the edge of the fixed area, where a hard boundary condition makes the stress grow without limit as the mesh is refined, so treat it as an upper bound.</p>
-<img src="../../cad/scooter-phone-mount/fea/fea-bump_z-section.png" alt="Stress section, bump case">
-<p>Even the peak stress is less than a tenth of the silicone's tensile strength (about 2.8 MPa), and the strains are about 2-3% against an elongation at break over 300%. Riding loads won't tear it. The real stress in this part comes from stretching it onto the phone, which this linear model doesn't include.</p>
-
-<h3>Vibration</h3>
-<table>
-  <tr><th>Mode</th><th>Frequency</th><th>Motion</th></tr>
-  <tr><td>1</td><td>30 Hz</td><td>phone twists on the hub (about the axis through the screen)</td></tr>
-  <tr><td>2, 3</td><td>75 Hz</td><td>phone rocks fore-aft and side to side</td></tr>
-  <tr><td>4, 5</td><td>108-116 Hz</td><td>phone slides fore-aft and sideways</td></tr>
-  <tr><td>6</td><td>310-360 Hz</td><td>phone moves straight up and down (squeezing the hub)</td></tr>
-</table>
-<img src="../../cad/scooter-phone-mount/fea/fea-mode2.png" alt="Mode 2 shape">
-<p>To see what the phone feels, I shook the bar and computed the phone's acceleration divided by the bar's acceleration (transmissibility) from the modes, with 5% damping assumed for the silicone:</p>
-<img src="../../cad/scooter-phone-mount/fea/fea-transmissibility.png" alt="Transmissibility plot">
-<p>What this shows:</p>
-<ul>
-  <li>Up and down, the mount is basically rigid. The hub is nearly incompressible silicone, so vertical shocks pass straight to the phone.</li>
-  <li>Fore-aft and sideways, the rocking mode at 75 Hz amplifies vibration about 5 times. That's at the top of the 0.5-80 Hz range used for scooter ride-comfort studies. With Shore 15A silicone the mode drops to about 57 Hz, right in the middle of it.</li>
-  <li>The mount only isolates the phone above about 130-150 Hz.</li>
-</ul>
-<p>So as designed it holds the phone securely, but it is not a vibration damper. To make it one, the next version needs a much lower natural frequency: for example, a gap so the phone rides on the arms instead of sitting directly on the hub, or a softer, thinner hub. I can check that with the same model before casting.</p>
-
-<h3>Checking the FEA</h3>
-<ul>
-  <li><b>Solver vs. beam theory:</b> a silicone cantilever with the same elements and &nu; gives a tip deflection within 2.5% and a first frequency within 0.9% of Euler-Bernoulli (<a href="../../cad/scooter-phone-mount/fea/benchmark.txt">output</a>).</li>
-  <li><b>Mesh convergence:</b> going from 178k to 204k degrees of freedom changes the first five frequencies by less than 1.6% and the displacements by less than 2%. (Mode 6 moves more, from 308 to 356 Hz, which is far above the range that matters here.)</li>
-  <li><b>Hand check of the fore-aft stiffness:</b> treat the hub as a rubber pad in shear, with \(G = \frac{E}{2(1+\nu)} = 0.38\) MPa:
-  $$k \approx \frac{G A}{t}$$
-  With \(A \approx 24 \times 50\) mm and \(t\) = 6-10 mm, that gives 46-77 N/mm. The FE value is 86 N/mm, a bit stiffer because the strap root and arms also carry load.</li>
-  <li><b>Modes cover the response:</b> the 8 modes I used account for over 96% of the moving mass in each direction.</li>
-  <li><b>Mass:</b> the FE model's net mass (37 g, without the strap tail) matches the CAD volume.</li>
-</ul>
-<p>The code is in <a href="https://github.com/proj-v-op/proj-v-op.github.io/tree/main/cad/scooter-phone-mount/fea/code">fea/code</a>, and the full numbers are in <a href="../../cad/scooter-phone-mount/fea/results.json">results.json</a>.</p>
-
 <h2>Files</h2>
 <ul>
-  <li><a href="../../cad/scooter-phone-mount/files/phone_net_v6_final_step.zip">Final part, v6 (STEP, zipped)</a></li>
-  <li><a href="../../cad/scooter-phone-mount/files/phone_net_v6_fixed.SLDPRT">SolidWorks part, v6 (net and hub, before the strap was added)</a></li>
-  <li><a href="../../cad/scooter-phone-mount/files/mold_tray_v6_x2.stl">Mold tray, two cavities (STL for printing)</a></li>
+<li><a href="../../cad/scooter-phone-mount/files/phone_net_v6_final_step.zip">Final part, v6 (STEP, zipped)</a></li>
+<li><a href="../../cad/scooter-phone-mount/files/phone_net_v6_fixed.SLDPRT">SolidWorks part, v6 (net and hub, before the strap was added)</a></li>
+<li><a href="../../cad/scooter-phone-mount/files/mold_tray_v6_x2.stl">Mold tray, two cavities (STL for printing)</a></li>
 </ul>
 
 <p><a href="../cad.html">Back to CAD</a></p>
