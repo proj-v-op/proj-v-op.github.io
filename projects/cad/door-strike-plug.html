@@ -32,14 +32,14 @@
 <p>One honest limit: version 1 tilts out, it doesn't shoot out. A spring leaf could do that, but it only works if I know how deep the box is, which I don't yet.</p>
 
 <h2>What I didn't know, and the six versions</h2>
-<p>I couldn't measure the hole directly, so the size I designed for (about 19.8 by 33.9 mm, D shaped) is an estimate that could easily be off by half a millimeter or more. I also can't see how deep the box behind the plate is, and I might have read which side of the D is flat backwards. Those are three separate unknowns, and each one could make a print fail on its own. So each became a version. All six print on one plate (numbers engraved inside each one), so one print run tests every guess.</p>
+<p>I couldn't measure the hole directly, so the size I designed for (about 19.8 by 33.9 mm, D shaped) is an estimate that could easily be off by half a millimeter or more. I also can't see how deep the box behind the plate is. Those are two separate unknowns, and either one could make a print fail on its own, so each got its own versions, plus one that combines the worst case of both. All six print on one plate (numbers engraved inside each one), so one print run tests every guess.</p>
 
 <table>
 <tr><th>#</th><th>Version</th><th>What it solves for</th></tr>
 <tr><td>1</td><td>Snug</td><td>Hole narrower than my estimate</td></tr>
 <tr><td>2</td><td>Medium</td><td>My best guess for the hole</td></tr>
 <tr><td>3</td><td>Tight</td><td>Hole wider than my estimate</td></tr>
-<tr><td>4</td><td>Mirrored</td><td>I got the flat and round sides backwards</td></tr>
+<tr><td>4</td><td>Tight + deep</td><td>Hole wider than my estimate and box deeper than I assumed, both at once</td></tr>
 <tr><td>5</td><td>Deep</td><td>Box behind the plate is deeper than I assumed</td></tr>
 <tr><td>6</td><td>Shallow</td><td>Box behind the plate is shallower than I assumed</td></tr>
 </table>
@@ -56,13 +56,13 @@
 <img src="../../cad/door-strike-plug/renders/config3-tight.png" alt="Config 3, tight">
 <p>1.2 mm of squeeze, the strongest hold. If the hole is wider than my estimate, this is the one that keeps a grip. The trade is that a narrower hole puts about 5 percent bend on the tongues, which is getting close to where PETG could crack.</p>
 
-<h3>4. Mirrored</h3>
-<img src="../../cad/door-strike-plug/renders/config4-mirrored.png" alt="Config 4, mirrored">
-<p>The hole is D shaped, flat on one side and rounded on the other. I read which side is which from a hand trace, so it's very possible I flipped it. This is the medium version mirrored. If the other five don't seat because the corners don't line up, this is the fix.</p>
+<h3>4. Tight + deep</h3>
+<img src="../../cad/door-strike-plug/renders/config4-tight-deep.png" alt="Config 4, tight and deep">
+<p>Versions 3 and 5 combined: the strongest side bumps (1.2 mm of squeeze) on the 13 mm deep body. The two unknowns don't depend on each other, so there's no reason a wide hole and a deep box can't happen together, and with only versions 3 and 5 I'd be covering one at a time. If both guesses are wrong in the same direction, this is the one that still works.</p>
 
 <h3>5. Deep</h3>
 <img src="../../cad/door-strike-plug/renders/config5-deep.png" alt="Config 5, deep">
-<p>The foot has to touch the bottom of the box for the plug to sit flush, so the plug's depth has to match the box. Versions 1 to 4 need 11.2 mm of box. This one has a 13 mm body and needs 14.2 mm, and it needs 15.5 mm while it's rocked. I also made the body 1 mm shorter (28 mm instead of 29) because with the pivot farther back, the full height would touch the hole sooner when rocking.</p>
+<p>The foot has to touch the bottom of the box for the plug to sit flush, so the plug's depth has to match the box. Versions 1 to 3 need 11.2 mm of box. This one has a 13 mm body and needs 14.2 mm, and it needs 15.5 mm while it's rocked. I also made the body 1 mm shorter (28 mm instead of 29) because with the pivot farther back, the full height would touch the hole sooner when rocking.</p>
 
 <h3>6. Shallow</h3>
 <img src="../../cad/door-strike-plug/renders/config6-shallow.png" alt="Config 6, shallow">
@@ -75,7 +75,7 @@
 <p>I wrote the model as a script so every number is a setting I can change. Before printing I checked one thing in code. Nothing here is measured yet, it's a prediction I'll compare against the real print.</p>
 
 <h3>Does it clear the hole when it rocks?</h3>
-<p>The first version I drew only rocked about 6 degrees before its widest part hit the hole, which would have lifted the top edge only 1.5 mm. That's not enough to grab, and it would have been worse if the hole is a millimeter smaller than I think. I narrowed the body and chamfered the face edges, and the final versions rock 15 to 21 degrees before touching, even with a hole a full millimeter smaller than my estimate. Version 5 (deep) is the tightest at about 13 degrees in that worst case. Version 6 never touches.</p>
+<p>The first version I drew only rocked about 6 degrees before its widest part hit the hole, which would have lifted the top edge only 1.5 mm. That's not enough to grab, and it would have been worse if the hole is a millimeter smaller than I think. I narrowed the body and chamfered the face edges, and the final versions rock 13 to 21 degrees before touching, even with a hole a full millimeter smaller than my estimate. The deep ones (4 and 5) are the tightest at about 13 degrees in that worst case. Version 6 never touches.</p>
 
 <h2>Test results</h2>
 
@@ -85,7 +85,7 @@
 <li><a href="../../cad/door-strike-plug/files/config1-snug.step">1 Snug (STEP)</a></li>
 <li><a href="../../cad/door-strike-plug/files/config2-medium.step">2 Medium (STEP)</a></li>
 <li><a href="../../cad/door-strike-plug/files/config3-tight.step">3 Tight (STEP)</a></li>
-<li><a href="../../cad/door-strike-plug/files/config4-mirrored.step">4 Mirrored (STEP)</a></li>
+<li><a href="../../cad/door-strike-plug/files/config4-tight-deep.step">4 Tight + deep (STEP)</a></li>
 <li><a href="../../cad/door-strike-plug/files/config5-deep.step">5 Deep (STEP)</a></li>
 <li><a href="../../cad/door-strike-plug/files/config6-shallow.step">6 Shallow (STEP)</a></li>
 <li><a href="../../cad/door-strike-plug/code/plug_lib.py">plug_lib.py</a>: the parametric model and the checks</li>
