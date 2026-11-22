@@ -8,7 +8,7 @@ CONFIGS = [
     (1, "A snug (squeeze 0.4)",      dict(squeeze=0.4)),
     (2, "B medium (squeeze 0.8)",    dict(squeeze=0.8)),
     (3, "C tight (squeeze 1.2)",     dict(squeeze=1.2)),
-    (4, "B mirrored (flat side flipped)", dict(squeeze=0.8, mirror=True)),
+    (4, "Tight + deep (squeeze 1.2, 13 mm)", dict(squeeze=1.2, depth=13.0, body_h=28.0)),
     (5, "Deep box (13 mm body)",     dict(squeeze=0.8, depth=13.0, body_h=28.0)),
     (6, "Shallow box (7.5 mm body)", dict(squeeze=0.5, depth=7.5, taper_start=3.5, wall=0.8, bump_z=-6.0, bump_r=1.3, slit_root=2.3)),
 ]
