@@ -72,26 +72,10 @@
 <p class="small">All six on one plate, printed face down.</p>
 
 <h2>Checks before printing</h2>
-<p>I wrote the model as a script so every number is a setting I can change. Before printing I checked two things in code. Nothing here is measured yet, it's all predictions I'll compare against the real print.</p>
+<p>I wrote the model as a script so every number is a setting I can change. Before printing I checked one thing in code. Nothing here is measured yet, it's a prediction I'll compare against the real print.</p>
 
 <h3>Does it clear the hole when it rocks?</h3>
 <p>The first version I drew only rocked about 6 degrees before its widest part hit the hole, which would have lifted the top edge only 1.5 mm. That's not enough to grab, and it would have been worse if the hole is a millimeter smaller than I think. I narrowed the body and chamfered the face edges, and the final versions rock 15 to 21 degrees before touching, even with a hole a full millimeter smaller than my estimate. Version 5 (deep) is the tightest at about 13 degrees in that worst case. Version 6 never touches.</p>
-
-<h3>How hard does it hold?</h3>
-<p>I estimated the holding force from how much each side tongue bends (treating it like a diving board), assuming PETG and a friction guess of 0.35. The numbers are holding force in newtons and how much the tongue bends in percent. PETG starts to risk cracking somewhere around 4 to 5 percent, which is a rough number from memory, not from a datasheet.</p>
-
-<table>
-<tr><th>Version</th><th>Hole 0.5 mm wider</th><th>Hole as estimated</th><th>Hole 0.5 mm narrower</th><th>Hole 1 mm narrower</th></tr>
-<tr><td>1 Snug</td><td>0.0 N / 0.0%</td><td>2.6 N / 0.9%</td><td>5.8 N / 2.1%</td><td>9.1 N / 3.2%</td></tr>
-<tr><td>2 Medium</td><td>1.9 N / 0.7%</td><td>5.2 N / 1.9%</td><td>8.4 N / 3.0%</td><td>11.7 N / 4.2%</td></tr>
-<tr><td>3 Tight</td><td>4.5 N / 1.6%</td><td>7.8 N / 2.8%</td><td>11.0 N / 3.9%</td><td>14.3 N / 5.1%</td></tr>
-<tr><td>4 Mirrored</td><td>1.9 N / 0.7%</td><td>5.2 N / 1.9%</td><td>8.4 N / 3.0%</td><td>11.7 N / 4.2%</td></tr>
-<tr><td>5 Deep</td><td>1.9 N / 0.7%</td><td>5.2 N / 1.9%</td><td>8.4 N / 3.0%</td><td>11.7 N / 4.2%</td></tr>
-<tr><td>6 Shallow</td><td>0.0 N / 0.0%</td><td>7.1 N / 2.2%</td><td>14.2 N / 4.4%</td><td>21.2 N / 6.6%</td></tr>
-</table>
-<p class="small">Versions 4 and 5 use the same side tongues as version 2, so their numbers match it.</p>
-
-<p>The thing I can't predict is the bolt spring. If the spring pushes harder than the plug holds, the plug gets pushed in and the bolt follows it. That's exactly why the foot matters, and why the depth versions exist.</p>
 
 <h2>Test results</h2>
 <p>Printing all six tomorrow. I'll fill this in with what I find:</p>
