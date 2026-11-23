@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blackbox Log, Nov 22 2026 - Owen Pritchard</title>
+<link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+
+<nav><a href="../../index.html">Home</a> <a href="../simulation.html">Simulation</a> <a href="../drone.html">Drones</a> <a href="../cad.html">CAD</a></nav>
+
+<h1>Blackbox Log: Nov 22, 2026</h1>
+<p class="small">5 inch quad, Foxeer F722V2 flight controller, Betaflight 4.3.0, 6S. Analysis done in Python with my own scripts.</p>
+
+<p>I hadn't looked at Blackbox on this quad in a while, so I pulled everything off the flash chip and went through it properly. Instead of just scrolling through Blackbox Explorer, I decoded the log in Python and made my own plots. That way every claim below points at a specific graph you can check.</p>
+
+<p>Short version: the quad flies fine, but roll has a constant 62 Hz shake that the motors are fighting the whole flight, and the quad is tail heavy.</p>
+
+<h2>Setup</h2>
+<table>
+<tr><th>Thing</th><th>Setting</th></tr>
+<tr><td>Flight controller</td><td>Foxeer F722V2, Betaflight 4.3.0</td></tr>
+<tr><td>Battery</td><td>6S</td></tr>
+<tr><td>Motor protocol</td><td>DShot600 with bidirectional DShot, RPM filter on (3 harmonics)</td></tr>
+<tr><td>Loop / log rate</td><td>8 kHz loop, logging at 2 kHz</td></tr>
+<tr><td>PIDs (P / I / D)</td><td>Roll 51 / 64 / 36, Pitch 56 / 71 / 39, Yaw 51 / 64 / 0</td></tr>
+<tr><td>Debug mode</td><td>GYRO_SCALED, which logs the gyro <i>before</i> filtering so I can compare raw vs filtered</td></tr>
+<tr><td>Flight mode</td><td>Angle (self-level) the whole flight</td></tr>
+</table>
+
+<h2>What was on the flash chip</h2>
+<p>Seven logs. Five are just me arming on the bench. Log 4 is a 10 second hop where I walked the throttle up slowly. Log 7 is the real flight: 4 minutes 22 seconds, and it got cut off because the 16 MB chip filled up. Everything below is from log 7 unless I say otherwise.</p>
+
+<img src="../../drone/blackbox/2026-11-22/graphs/log7_01_overview.png" alt="Log 7 overview">
+<p class="small">The whole flight. Top: my throttle stick. Then the four motor outputs, battery voltage, and current. The thing to notice is the motor plot: all four motors are slamming between idle and full output constantly, even when I'm just cruising at 20% throttle. That's not normal, and it's what sent me looking for the oscillation below.</p>
+
+<h2>Finding 1: roll has a steady 62 Hz shake</h2>
+<p>This is the big one. The roll axis oscillates at about 62 Hz, roughly &plusmn;20 deg/s, the entire flight, even with the stick centered. Pitch and yaw don't do it.</p>
+
+<p><b>Evidence:</b></p>
+<img src="../../drone/blackbox/2026-11-22/graphs/log7_02_tracking_zoom.png" alt="Setpoint vs gyro, zoomed">
+<p class="small">Orange is what I asked for, blue is what the quad actually did. Pitch and yaw sit right on the orange line. Roll is a thick zigzag around it. You can count the cycles: about 31 in half a second, so around 62 Hz.</p>
+
+<img src="../../drone/blackbox/2026-11-22/graphs/log7_04_noise_spectrum.png" alt="Noise spectrum">
+<p class="small">Noise vs frequency. Orange is the raw gyro and blue is after Betaflight's filters. On roll there's a sharp spike at 62 Hz that's just as tall in blue as in orange, so the filters aren't touching it. That makes sense: my lowest D-term filter cutoff is 75 Hz, so 62 Hz gets through.</p>
+
+<img src="../../drone/blackbox/2026-11-22/graphs/log7_05_noise_vs_throttle_unfiltered.png" alt="Noise vs throttle, unfiltered">
+<p class="small">Same thing, split up by throttle. Darker means more noise. The diagonal band climbing from about 200 to 450 Hz is normal motor noise: spin the motors faster and the noise moves up. The roll shake is the dark <i>flat</i> line at 62 Hz. It doesn't move with throttle, so it isn't coming from the motors or props spinning.</p>
+
+<img src="../../drone/blackbox/2026-11-22/graphs/log7_03_pid_terms_zoom.png" alt="PID terms">
+<p class="small">What each part of the PID controller is outputting. On roll, the D-term (green) is swinging &plusmn;100 to 150 while P is tiny. So D is the part pushing the motors back and forth.</p>
+
+<img src="../../drone/blackbox/2026-11-22/graphs/log4_02_tracking_full.png" alt="Log 4 setpoint vs gyro">
+<p class="small">The short hop (log 4) has it too, at the same 62.6 Hz. Same frequency in two separate logs means it's something built into the quad, not a one-off.</p>
+
+<p><b>What I think it is:</b> one of two things. Either the roll loop itself is oscillating (roll D a bit too high), or something on the frame is loose and ringing at 62 Hz, like the stack, an arm screw, or the camera mount. The D-term would amplify either one. A constant frequency that doesn't change with throttle fits both, so the data alone can't tell them apart. The plan is to check the hardware first since that's free, then drop roll D from 36 to about 30 and log again. If the spike shrinks, it was tuning. If it doesn't move, it's mechanical.</p>
+
+<h2>Finding 2: the quad is tail heavy</h2>
+<p>The two back motors work harder than the two front ones for the whole flight.</p>
+
+<p><b>Evidence:</b></p>
+<img src="../../drone/blackbox/2026-11-22/graphs/log7_08_motor_balance.png" alt="Motor balance and I-term">
+<p class="small">Left: average output of each motor while flying. In Betaflight's default motor order, M1 and M3 are the rear motors, and they average about 100 higher than the front pair. I also split the flight into quarters and the gap shows up in every quarter, so it isn't one maneuver skewing it. Right: the I-term is the part of the controller that builds up to cancel a steady push. Roll stays near zero (left and right sides are balanced). Pitch sits around +27 for basically the whole flight, which means the quad is always correcting for one end being heavier. That's the controller holding up the back.</p>
+
+<p><b>Correction:</b> my first read of the motor numbers was "a bent prop on one diagonal." That was wrong. M1 and M3 aren't a diagonal pair, they're both in the back. A front/back split like this points to balance: the battery or GoPro sitting too far back. A bent prop would show up as extra vibration on one motor at that motor's RPM. This log can't show that because per-motor RPM wasn't logged, so I can't rule a bent prop in or out from this data. Yaw I-term does sit a little above zero (about +8), which could be a slightly tilted motor or a prop, but it's small enough that I wouldn't call it.</p>
+
+<p><b>Fix:</b> move the battery forward and re-log. If the pitch I-term centers near zero and the front and rear motor averages come together, that confirms it. (This all assumes I didn't remap the motor order. If I did, M1 to M4 positions change.)</p>
+
+<h2>Finding 3: motor noise is handled well</h2>
+<img src="../../drone/blackbox/2026-11-22/graphs/log7_05_noise_vs_throttle_filtered.png" alt="Noise vs throttle, filtered">
+<p class="small">Same throttle plot as above, but after filtering. The 200 to 450 Hz motor band is mostly gone. In the spectrum graph the filtered line sits 15 to 25 dB under the raw one across that range. The RPM filter and dynamic notch are doing their job, so I'm not touching the filters.</p>
+
+<h2>Finding 4: the current sensor reads low</h2>
+<p>Battery went from 4.10 V per cell at rest to 3.66 V per cell after about 4 minutes, and sagged to 3.13 V per cell on punch-outs (voltage plot in the overview). That's a real chunk of the pack. But the current sensor says only about 250 mAh was used, which is way too low for that much voltage drop. So the current-sensor scale is probably off, and my OSD mAh number is lying to me. Fix: fly a pack, see how many mAh the charger puts back in, and set the scale so the two match.</p>
+
+<h2>Other graphs</h2>
+<img src="../../drone/blackbox/2026-11-22/graphs/log7_02_tracking_full.png" alt="Setpoint vs gyro, full flight">
+<p class="small">Setpoint vs gyro for the whole flight. Same story as the zoom: the roll band is thick the whole way through, while pitch and yaw follow closely.</p>
+
+<img src="../../drone/blackbox/2026-11-22/graphs/log7_07_motor_distribution.png" alt="Motor output distribution">
+<p class="small">How much time each motor spends at each output level. The spread is wide for a mostly gentle flight, which is the oscillation again.</p>
+
+<img src="../../drone/blackbox/2026-11-22/graphs/log7_06_step_response.png" alt="Step response">
+<p class="small">Step response: if I command a sudden rate change, how fast and cleanly does the quad get there? I'm not reading much into this one. It needs sharp stick inputs, and I flew this in Angle mode pretty gently, so it only found 2 usable roll moments and 6 for pitch. To get a real step response, I'll fly a pack in Acro with crisp flips and rolls.</p>
+
+<img src="../../drone/blackbox/2026-11-22/graphs/log4_01_overview.png" alt="Log 4 overview">
+<p class="small">Log 4, the short hop. I walked the throttle up to about 21%, and the motors were already thrashing at low throttle.</p>
+
+<h2>Next steps</h2>
+<ol>
+<li>Tighten the stack, arm screws, and camera mount. Check props while I'm in there.</li>
+<li>Move the battery forward.</li>
+<li>If the 62 Hz is still there, drop roll D from 36 to about 30.</li>
+<li>Erase the flash, then fly one pack in Angle and one in Acro, and re-run the same scripts to compare.</li>
+</ol>
+
+<h2>Files</h2>
+<ul>
+<li><a href="https://github.com/proj-v-op/proj-v-op.github.io/raw/main/drone/blackbox/2026-11-22/BTFL_BLACKBOX_LOG_FOXEER_20261122_161749_FOXEERF722V2.BBL">Raw Blackbox log (.BBL)</a>: opens in Betaflight Blackbox Explorer</li>
+<li><a href="https://github.com/proj-v-op/proj-v-op.github.io/blob/main/drone/blackbox/2026-11-22/main-flight_250Hz.csv">Main flight as CSV</a>: downsampled to 250 Hz</li>
+<li><a href="https://github.com/proj-v-op/proj-v-op.github.io/blob/main/drone/blackbox/2026-11-22/settings.txt">Full Betaflight settings from the log header</a></li>
+<li><a href="https://github.com/proj-v-op/proj-v-op.github.io/tree/main/code/blackbox">Analysis scripts</a>: decode the log, make every graph on this page</li>
+</ul>
+
+</body>
+</html>
