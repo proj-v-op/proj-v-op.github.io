@@ -11,7 +11,7 @@
 <nav><a href="../../index.html">Home</a> <a href="../simulation.html">Simulation</a> <a href="../drone.html">Drones</a> <a href="../cad.html">CAD</a></nav>
 
 <h1>Blackbox Flight Log Analysis: Nov 22, 2026</h1>
-<p class="small">5 in quad, Foxeer F722V2 flight controller, Betaflight 4.3.0, 6S 1300 mAh 150C batteries, analysis in Python.</p>
+<p class="small">5 in quad, Foxeer F722V2 flight controller, Betaflight 4.3.0, 6S 1550 mAh 150C batteries, analysis in Python.</p>
 
 <h2>Abstract</h2>
 <p>Betaflight Blackbox data from a 4 min 22 s flight were decoded and analyzed in the time and frequency domains. Results show (1) a throttle-invariant 62 Hz roll oscillation that passes through the gyro and D-term filters unattenuated, (2) a persistent rear-biased thrust distribution consistent with an aft center of gravity, (3) 15 to 25 dB attenuation of the 200 to 450 Hz motor noise band, and (4) an under-scaled current sensor.</p>
@@ -20,7 +20,7 @@
 <table>
 <tr><th>Parameter</th><th>Value</th></tr>
 <tr><td>Flight controller</td><td>Foxeer F722V2, Betaflight 4.3.0</td></tr>
-<tr><td>Battery</td><td>6S 1300 mAh 150C</td></tr>
+<tr><td>Battery</td><td>6S 1550 mAh 150C</td></tr>
 <tr><td>Motor protocol</td><td>DShot600, bidirectional; RPM filter, 3 harmonics</td></tr>
 <tr><td>PID loop / log rate</td><td>8 kHz / 2 kHz</td></tr>
 <tr><td>PID gains (P / I / D)</td><td>Roll 51 / 64 / 36; Pitch 56 / 71 / 39; Yaw 51 / 64 / 0</td></tr>
@@ -64,7 +64,7 @@
 <p class="small">Fig. 8. Filtered gyro spectrogram vs. throttle. The 200 to 450 Hz band is attenuated 15 to 25 dB relative to raw (Fig. 3).</p>
 
 <h3>3.5 Power</h3>
-<p>Cell voltage: 4.10 V at rest, 3.66 V after ~4 min, 3.13 V minimum under load (Fig. 1). Reported consumption: ~250 mAh (19% of rated capacity).</p>
+<p>Cell voltage: 4.10 V at rest, 3.66 V after ~4 min, 3.13 V minimum under load (Fig. 1). Reported consumption: ~250 mAh (16% of rated capacity).</p>
 
 <h3>3.6 Supplementary</h3>
 <img src="../../drone/blackbox/2026-11-22/graphs/log7_02_tracking_full.png" alt="Setpoint vs gyro, full flight">
@@ -83,7 +83,7 @@
 
 <p><b>Filtering.</b> The RPM filter and dynamic notch effectively suppress rotor-synchronous noise (Fig. 8).</p>
 
-<p><b>Current sensor.</b> A 0.44 V/cell resting drop is inconsistent with 19% capacity use, indicating the current sensor scale is under-reading.</p>
+<p><b>Current sensor.</b> A 0.44 V/cell resting drop is inconsistent with 16% capacity use, indicating the current sensor scale is under-reading.</p>
 
 <h2>5. Conclusion</h2>
 <ul>
